@@ -1,0 +1,11 @@
+{
+  "merge_weights": "../weights/merge_module.pt",
+  "rule_files": {
+    "2": "../rules/bigrams.pt",
+    "3": "../rules/trigrams.pt",
+    "4": "../rules/fourgrams.pt"
+  },
+  "num_heads": 4,
+  "surrogate_cache_size": 4096,
+  "local_files_only": false
+}
