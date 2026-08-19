@@ -1,0 +1,142 @@
+{
+  "format": "UMIM release manifest",
+  "models": {
+    "gpt2-xl": {
+      "base_model": "openai-community/gpt2-xl",
+      "hidden_size": 1600,
+      "merge_module": {
+        "dtype": "float32",
+        "file": "merge_module.pt",
+        "sha256": "15357651b23f6ab78e2fdfa64dd4622b0714b813a2f9f3f61a0cae8dc0ac4706",
+        "size_bytes": 20529236,
+        "tensor_count": 9
+      },
+      "num_attention_heads": 4,
+      "rules": {
+        "2": {
+          "count": 218415,
+          "dtype": "int32",
+          "file": "filtered_bigrams_tensor.pt",
+          "max_token_id": 50255,
+          "min_token_id": 12,
+          "sha256": "5314ce0d98784afbafd7530a1d6d99c4bcc3cbb47ef207551f76d66340cca112",
+          "size_bytes": 1748652
+        },
+        "3": {
+          "count": 702570,
+          "dtype": "int32",
+          "file": "filtered_trigrams_tensor.pt",
+          "max_token_id": 50254,
+          "min_token_id": 6,
+          "sha256": "7da885e42794dfe91ff1a74dec58aeb1b2aea7928a6345ed838fa3a34941af52",
+          "size_bytes": 8432177
+        },
+        "4": {
+          "count": 1241657,
+          "dtype": "int32",
+          "file": "filtered_fourgrams_tensor.pt",
+          "max_token_id": 50253,
+          "min_token_id": 6,
+          "sha256": "24feb7320011daf547cd242a8265304cd112ca19f2b1031669913f843dc6f619",
+          "size_bytes": 19867830
+        }
+      },
+      "training_checkpoint_metadata": {
+        "best_val_loss": 3.5166141991783126,
+        "epoch": 14,
+        "global_step": 123390,
+        "val_loss": 3.5166141991783126
+      }
+    },
+    "llama-3.1-8b": {
+      "base_model": "meta-llama/Llama-3.1-8B",
+      "hidden_size": 4096,
+      "merge_module": {
+        "dtype": "bfloat16",
+        "file": "merge_module.pt",
+        "sha256": "1f221a3f87a457b3e74e20e68413f6c21dfb0fa7873ffff298733a21bcb7ce14",
+        "size_bytes": 67168588,
+        "tensor_count": 9
+      },
+      "num_attention_heads": 4,
+      "rules": {
+        "2": {
+          "count": 216700,
+          "dtype": "int32",
+          "file": "filtered_bigrams_tensor.pt",
+          "max_token_id": 127935,
+          "min_token_id": 12,
+          "sha256": "75a202e6f29be5d4bc8137790f35b80af68c53bd30e06b918a42177c4db57a5c",
+          "size_bytes": 1734892
+        },
+        "3": {
+          "count": 684793,
+          "dtype": "int32",
+          "file": "filtered_trigrams_tensor.pt",
+          "max_token_id": 128000,
+          "min_token_id": 11,
+          "sha256": "5129bf14b7542e7fde1e7e51721cc0779c4dd39959c6383860b4d6efab10e938",
+          "size_bytes": 8218801
+        },
+        "4": {
+          "count": 1266080,
+          "dtype": "int32",
+          "file": "filtered_fourgrams_tensor.pt",
+          "max_token_id": 128000,
+          "min_token_id": 6,
+          "sha256": "636e9e275573e7a55a55b36974447ca6a75e85c38bc777b1f7d3e4d086a62a44",
+          "size_bytes": 20258614
+        }
+      },
+      "training_checkpoint_metadata": {}
+    },
+    "llama-3.2-1b": {
+      "base_model": "meta-llama/Llama-3.2-1B",
+      "hidden_size": 2048,
+      "merge_module": {
+        "dtype": "float32",
+        "file": "merge_module.pt",
+        "sha256": "85f7d800d64130f8278480d24ced3752c929c64ff4249dd50647e8b870d2e0c7",
+        "size_bytes": 33616212,
+        "tensor_count": 9
+      },
+      "num_attention_heads": 4,
+      "rules": {
+        "2": {
+          "count": 216700,
+          "dtype": "int32",
+          "file": "filtered_bigrams_tensor.pt",
+          "max_token_id": 127935,
+          "min_token_id": 12,
+          "sha256": "75a202e6f29be5d4bc8137790f35b80af68c53bd30e06b918a42177c4db57a5c",
+          "size_bytes": 1734892
+        },
+        "3": {
+          "count": 684793,
+          "dtype": "int32",
+          "file": "filtered_trigrams_tensor.pt",
+          "max_token_id": 128000,
+          "min_token_id": 11,
+          "sha256": "5129bf14b7542e7fde1e7e51721cc0779c4dd39959c6383860b4d6efab10e938",
+          "size_bytes": 8218801
+        },
+        "4": {
+          "count": 1266080,
+          "dtype": "int32",
+          "file": "filtered_fourgrams_tensor.pt",
+          "max_token_id": 128000,
+          "min_token_id": 6,
+          "sha256": "636e9e275573e7a55a55b36974447ca6a75e85c38bc777b1f7d3e4d086a62a44",
+          "size_bytes": 20258614
+        }
+      },
+      "training_checkpoint_metadata": {
+        "best_val_loss": 3.3169725206163196,
+        "epoch": 14,
+        "global_step": 111600,
+        "val_loss": 3.3169725206163196
+      }
+    }
+  },
+  "version": 1
+}

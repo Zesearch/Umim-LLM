@@ -1,0 +1,11 @@
+{
+  "merge_weights": "merge_module.pt",
+  "rule_files": {
+    "2": "filtered_bigrams_tensor.pt",
+    "3": "filtered_trigrams_tensor.pt",
+    "4": "filtered_fourgrams_tensor.pt"
+  },
+  "num_heads": 4,
+  "surrogate_cache_size": 4096,
+  "local_files_only": false
+}

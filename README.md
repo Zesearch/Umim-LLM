@@ -21,8 +21,8 @@
   <a href="https://github.com/Zesearch/Umim-LLM">
     <img src="https://img.shields.io/badge/Code-GitHub-202734?logo=github&amp;logoColor=white" alt="UMIM code on GitHub">
   </a>
-  <a href="https://huggingface.co/Zesearch">
-    <img src="https://img.shields.io/badge/Models%20%26%20Rules-Coming%20Soon-FFD21E?logo=huggingface&amp;logoColor=black" alt="UMIM models and rules coming soon">
+  <a href="https://huggingface.co/Zesearch/UMIM">
+    <img src="https://img.shields.io/badge/Models%20%26%20Rules-Hugging%20Face-FFD21E?logo=huggingface&amp;logoColor=black" alt="UMIM models and rules on Hugging Face">
   </a>
 </p>
 
@@ -207,41 +207,37 @@ distributed execution. Inference can be configured with `--device` and `--dtype`
 ## Checkpoints and Merge Rules
 
 Pretrained merge-module checkpoints and tokenizer-specific 2-/3-/4-gram rules
-will be released on Hugging Face. Each runtime configuration must use artifacts
-that match its backbone and tokenizer.
+are available both in this repository under `artifacts/` and on
+[Hugging Face](https://huggingface.co/Zesearch/UMIM). Each runtime configuration
+must use artifacts that match its backbone and tokenizer.
 
 A typical artifact directory has the following form:
 
 ```text
 artifacts/llama-3.1-8b/
 ├── merge_module.pt
-├── bigrams.pt
-├── trigrams.pt
-└── fourgrams.pt
+├── filtered_bigrams_tensor.pt
+├── filtered_trigrams_tensor.pt
+├── filtered_fourgrams_tensor.pt
+└── runtime_config.json
 ```
 
-Copy the example configuration and update its paths:
+The repository contains ready-to-use configurations for Llama-3.1-8B,
+Llama-3.2-1B, and GPT2-XL. The paths are relative to each configuration file, so
+no manual editing is required:
 
 ```bash
-cp generation/runtime_config.example.json generation/runtime_config.json
+python -m generation.generate \
+  --model meta-llama/Llama-3.1-8B \
+  --config artifacts/llama-3.1-8b/runtime_config.json \
+  --prompt "Language models can" \
+  --max-new-tokens 128 \
+  --device cuda:0 \
+  --dtype bfloat16
 ```
 
-```json
-{
-  "merge_weights": "../artifacts/llama-3.1-8b/merge_module.pt",
-  "rule_files": {
-    "2": "../artifacts/llama-3.1-8b/bigrams.pt",
-    "3": "../artifacts/llama-3.1-8b/trigrams.pt",
-    "4": "../artifacts/llama-3.1-8b/fourgrams.pt"
-  },
-  "num_heads": 4,
-  "surrogate_cache_size": 4096,
-  "local_files_only": false
-}
-```
-
-Relative artifact paths are resolved from the directory containing the runtime
-configuration.
+The `.pt` files in the GitHub copy are managed by Git LFS. The Hugging Face
+release additionally includes a checksum and tensor-metadata manifest.
 
 ## Quick Start
 
@@ -250,7 +246,7 @@ Generate text with prompt merging and decoding-time KV-cache rollback:
 ```bash
 python -m generation.generate \
   --model meta-llama/Llama-3.1-8B \
-  --config generation/runtime_config.json \
+  --config artifacts/llama-3.1-8b/runtime_config.json \
   --prompt "Language models can" \
   --max-new-tokens 128 \
   --device cuda:0 \
@@ -315,21 +311,21 @@ The shared runtime supports perplexity, multiple-choice QA, and summarization:
 # Perplexity: JSONL rows with a text field.
 python -m evaluation.evaluate_ppl \
   --model meta-llama/Llama-3.1-8B \
-  --config generation/runtime_config.json \
+  --config artifacts/llama-3.1-8b/runtime_config.json \
   --data data/wikitext_test.jsonl \
   --output outputs/wikitext_ppl.json
 
 # Multiple-choice QA: each row contains candidates and an integer label.
 python -m evaluation.evaluate_mcqa \
   --model meta-llama/Llama-3.1-8B \
-  --config generation/runtime_config.json \
+  --config artifacts/llama-3.1-8b/runtime_config.json \
   --data data/hellaswag.jsonl \
   --output outputs/hellaswag_predictions.jsonl
 
 # Summarization: each row contains a prompt and reference.
 python -m evaluation.evaluate_summarization \
   --model meta-llama/Llama-3.1-8B \
-  --config generation/runtime_config.json \
+  --config artifacts/llama-3.1-8b/runtime_config.json \
   --data data/cnn_dailymail.jsonl \
   --output outputs/cnn_dailymail_predictions.jsonl
 ```
@@ -359,7 +355,7 @@ website/               UMIM project website
 - [x] SFT and RL task adaptation for HellaSwag and ARC
 - [x] Project website source
 - [ ] arXiv page
-- [ ] Hugging Face checkpoints and merge rules
+- [x] Hugging Face checkpoints and merge rules
 
 ## Citation
 
