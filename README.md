@@ -15,9 +15,6 @@
   <a href="https://zesearch.github.io/Umim-LLM/">
     <img src="https://img.shields.io/badge/Project-Page-34979E?logo=githubpages&amp;logoColor=white" alt="UMIM project page">
   </a>
-  <a href="website/public/paper.pdf">
-    <img src="https://img.shields.io/badge/Paper-PDF-6878CC?logo=adobeacrobatreader&amp;logoColor=white" alt="UMIM paper PDF">
-  </a>
   <a href="#citation">
     <img src="https://img.shields.io/badge/arXiv-Coming%20Soon-B31B1B?logo=arxiv&amp;logoColor=white" alt="arXiv coming soon">
   </a>
@@ -361,7 +358,6 @@ website/               UMIM project website
 - [x] PPL, multiple-choice QA, and summarization evaluation
 - [x] SFT and RL task adaptation for HellaSwag and ARC
 - [x] Project website source
-- [x] Paper PDF
 - [ ] arXiv page
 - [ ] Hugging Face checkpoints and merge rules
 
