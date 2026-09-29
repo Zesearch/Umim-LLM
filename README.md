@@ -15,8 +15,11 @@
   <a href="https://zesearch.github.io/Umim-LLM/">
     <img src="https://img.shields.io/badge/Project-Page-34979E?logo=githubpages&amp;logoColor=white" alt="UMIM project page">
   </a>
-  <a href="#citation">
-    <img src="https://img.shields.io/badge/arXiv-Coming%20Soon-B31B1B?logo=arxiv&amp;logoColor=white" alt="arXiv coming soon">
+  <a href="https://arxiv.org/abs/2609.27233">
+    <img src="https://img.shields.io/badge/arXiv-2609.27233-B31B1B?logo=arxiv&amp;logoColor=white" alt="UMIM on arXiv">
+  </a>
+  <a href="https://neurips.cc/Conferences/2026">
+    <img src="https://img.shields.io/badge/NeurIPS-2026-4B44CE" alt="Accepted at NeurIPS 2026">
   </a>
   <a href="https://github.com/Zesearch/Umim-LLM">
     <img src="https://img.shields.io/badge/Code-GitHub-202734?logo=github&amp;logoColor=white" alt="UMIM code on GitHub">
@@ -354,18 +357,19 @@ website/               UMIM project website
 - [x] PPL, multiple-choice QA, and summarization evaluation
 - [x] SFT and RL task adaptation for HellaSwag and ARC
 - [x] Project website source
-- [ ] arXiv page
+- [x] arXiv paper
 - [x] Hugging Face checkpoints and merge rules
 
 ## Citation
 
-If you use UMIM, please cite our paper. The arXiv identifier will be added after
-the public release.
+If you use UMIM, please cite our paper.
 
 ```bibtex
 @misc{lan2026umim,
   title  = {Distilling Sequential Computation in Transformer Language Models},
   author = {Lan, Zixuan and Yang, Jessica and Li, Yanhong and Livescu, Karen and Zhou, Jiawei},
-  year   = {2026}
+  year   = {2026},
+  eprint = {2609.27233},
+  archivePrefix = {arXiv}
 }
 ```
