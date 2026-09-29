@@ -20,23 +20,29 @@ const getXPositions = (width: number) => {
 const methods = [
   {
     id: "rules",
-    label: "WT + Rules",
-    setting: "New bigram rules · Base Mφ frozen",
-    summary: "No parameter training",
+    label: "MφWT + Rtask",
+    setting: "Rule adaptation only",
+    summary: "Reuse the WikiText-pretrained merge module; replace only the merge rules.",
+    status: "Mφ frozen · LLM frozen",
+    result: "71.13% Acc. at 39.53% TR",
     values: [76.95, 75.73, 74.47, 71.13],
   },
   {
     id: "sft",
-    label: "WT + FT",
-    setting: "Task distillation · only Mφ learns",
-    summary: "Recovers compression loss",
+    label: "MφSFT + Rtask",
+    setting: "Task SFT",
+    summary: "Initialize from MφWT and fine-tune only the merge module on the target task.",
+    status: "Update Mφ only · LLM frozen",
+    result: "74.41% Acc. at 39.53% TR",
     values: [78.02, 77.28, 76.31, 74.41],
   },
   {
     id: "adapted",
-    label: "Task-Adapted",
-    setting: "SFT + DPO · only Mφ learns",
-    summary: "Above baseline through 39.53%",
+    label: "Mφtask + Rtask",
+    setting: "Task SFT + RL",
+    summary: "Continue from MφSFT and optimize only the merge module using DPO sequence pairs.",
+    status: "Update Mφ only · LLM frozen",
+    result: "81.06% Acc. at 39.53% TR · +2.72 pp over baseline",
     values: [84.1, 84.86, 83.65, 81.06],
   },
 ] as const;
@@ -232,7 +238,8 @@ export function TaskAdaptedResults() {
                     <h3>{method.label}</h3>
                     <strong>{method.setting}</strong>
                     <p>{method.summary}</p>
-                    <em>{method.values[0].toFixed(2)} <i>→</i> {method.values[3].toFixed(2)}</em>
+                    <small>{method.status}</small>
+                    <em>{method.result}</em>
                   </div>
                 </button>
               ))}

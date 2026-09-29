@@ -615,12 +615,13 @@ function DistillationAnimation({
             <span>2-gram in Merge Rules R</span>
           </div>
 
-          <div className="student-merge-bridge" style={{ gridColumn: "3 / 5", gridRow: 2 }}>
-            <div className="student-merge-input"><i>language</i><b>&amp;</b><i>model</i></div>
-            <span />
-            <div className="student-merge-module"><strong>Mφ</strong></div>
-            <span />
-            <div className="student-merge-output">language model</div>
+          <div className="student-merge-bridge" style={{ gridColumn: 4, gridRow: 2 }}>
+            <span className="student-merge-path student-merge-path-in" aria-hidden="true" />
+            <div className="student-merge-module">
+              <strong>Mφ</strong>
+              <small>Merge module</small>
+            </div>
+            <span className="student-merge-path student-merge-path-out" aria-hidden="true" />
           </div>
 
           <div className="student-forward-label" style={{ gridColumn: 1, gridRow: 3 }}>
@@ -954,7 +955,7 @@ const compressedPrefillTokens = [
 ];
 
 const inferenceCaptions = [
-  "Merge matched prompt spans before the first LLM forward; the KV cache is compressed from the beginning.",
+  "Merge matched prompt spans before the first LLM forward, then build the initial compressed KV cache and first next-token distribution.",
   "Prefill predicts “is”. After appending its token ID, UMIM checks the new tail. No merge rule matches, so “is” is forwarded normally and adds one new KV entry.",
   "Decoding predicts “a”. The tail “is a” matches a 2-gram rule, so UMIM rolls back the KV for “is” and replaces the pair with one merged KV state.",
 ];
@@ -1005,13 +1006,15 @@ function PrefillAnimation({
         <div className="prefill-merge-row" aria-label="Matched spans compressed by the trained merge module">
           <div className="prefill-row-label prefill-simple-label"><strong>Apply Mφ</strong></div>
           <div className="prefill-merge-grid">
-            <div className="prefill-merge-operation prefill-entity-merge prefill-merge-two">
-              <div className="prefill-entity-inputs"><i>language</i><em>&amp;</em><i>model</i></div><span />
-              <strong>Mφ</strong><span /><b>language model</b>
+            <div className="prefill-merge-operation prefill-merge-two">
+              <span className="prefill-merge-path prefill-merge-path-in" aria-hidden="true" />
+              <strong><b>Mφ</b></strong>
+              <span className="prefill-merge-path prefill-merge-path-out" aria-hidden="true" />
             </div>
-            <div className="prefill-merge-operation prefill-entity-merge prefill-merge-three">
-              <div className="prefill-entity-inputs"><i>the</i><em>&amp;</em><i>next</i><em>&amp;</em><i>token</i></div><span />
-              <strong>Mφ</strong><span /><b>the next token</b>
+            <div className="prefill-merge-operation prefill-merge-three">
+              <span className="prefill-merge-path prefill-merge-path-in" aria-hidden="true" />
+              <strong><b>Mφ</b></strong>
+              <span className="prefill-merge-path prefill-merge-path-out" aria-hidden="true" />
             </div>
           </div>
         </div>
@@ -1019,7 +1022,7 @@ function PrefillAnimation({
         <div className="prefill-compressed-row">
           <div className="prefill-row-label prefill-simple-label"><strong>Compressed Sequence</strong></div>
           <div className="prefill-compressed-strip">
-            {compressedPrefillTokens.map((token, index) => (
+            {compressedPrefillTokens.map((token) => (
               <div className={`prefill-token ${token.merged ? "prefill-super-token" : ""}`} key={token.index}>
                 <span>{token.word}</span><small>x{toSubscript(token.index)}</small>
               </div>
@@ -1028,18 +1031,18 @@ function PrefillAnimation({
         </div>
 
         <div className="prefill-model-row">
-          <div className="prefill-row-label prefill-simple-label"><strong>Frozen Base LLM</strong></div>
+          <div className="prefill-row-label prefill-simple-label"><strong>Base LLM Forward</strong></div>
           <div className="prefill-frozen-network">
             <TeacherNeuralField active={active && step === 0} flow="collective" />
           </div>
         </div>
 
         <div className="prefill-results-row">
-          <div className="prefill-row-label prefill-simple-label"><strong>Output</strong></div>
+          <div className="prefill-row-label prefill-simple-label"><strong>Prefill Output</strong></div>
           <div className="prefill-results">
             <div className="prefill-kv-panel">
               <div className="prefill-panel-heading">
-                <div><span>KV cache</span><strong>Entries</strong></div>
+                <div><span>Initial KV Cache</span></div>
                 <b>baseline 10 → UMIM 7</b>
               </div>
               <div className="prefill-kv-strip" aria-label="Seven compressed key-value cache entries">
@@ -1053,14 +1056,12 @@ function PrefillAnimation({
 
             <div className="prefill-next-token">
               <div className="prefill-panel-heading">
-                <div><strong>Next-token Prediction</strong></div>
+                <div><strong>First Next-token Distribution</strong></div>
               </div>
               <div className="prefill-next-body">
                 <div className="prefill-next-bars" aria-hidden="true">
                   {[38, 74, 46, 92, 57, 31].map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}
                 </div>
-                <span className="prefill-sample-arrow"><i /></span>
-                <div className="prefill-new-token"><small>token id</small><strong>“is”</strong></div>
               </div>
             </div>
           </div>
@@ -1074,14 +1075,14 @@ function PrefillAnimation({
         </div>
 
         <div className="decode-normal-state">
-          <div className="decode-side-label decode-simple-label"><strong>Append Token</strong></div>
+          <div className="decode-side-label decode-simple-label"><strong>Sample &amp; Append</strong></div>
           <div className="decode-prefill-sample">
             <strong>Next-token Prediction</strong>
             <div>{decodeDistribution.map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}</div>
             <span>sample</span>
             <b>“is”</b>
           </div>
-          <span className="decode-flow-arrow"><i /></span>
+          <span className="decode-stage-arrow" aria-hidden="true" />
           <div className="decode-sequence-stage">
             <div className="decode-real-token-lane">
               <label>Effective Sequence</label>
@@ -1091,7 +1092,7 @@ function PrefillAnimation({
                     <span>{token.word}</span>
                   </i>
                 ))}
-                <i className="decode-real-new-token"><span>is</span><small>new</small></i>
+                <i className="decode-real-new-token"><span>is</span></i>
               </div>
             </div>
             <div className="decode-real-kv-lane">
@@ -1109,21 +1110,27 @@ function PrefillAnimation({
         <div className="decode-normal-tail-row">
           <div className="decode-side-label decode-simple-label"><strong>Tail Check</strong></div>
           <div className="decode-tail-scan-wide">
+            <div className="decode-tail-check-heading">Check token-ID suffixes against Merge Rules R</div>
             <div className="decode-tail-words">
-              <i>in</i><i>the</i><i>world</i><i className="decode-tail-new-word">is</i>
+              <i>in</i><i>the</i><i>world</i><i>is</i>
             </div>
+            <span className="decode-tail-flow-arrow" aria-hidden="true" />
             <div className="decode-tail-probes">
               <span><b>2-gram</b><i>world · is</i></span>
               <span><b>3-gram</b><i>the · world · is</i></span>
               <span><b>4-gram</b><i>in · the · world · is</i></span>
             </div>
+            <span className="decode-tail-flow-arrow" aria-hidden="true" />
             <strong>No suffix appears in R</strong>
           </div>
         </div>
 
         <div className="decode-forward-block decode-normal-forward">
-          <div className="decode-side-label decode-simple-label"><strong>Frozen Base LLM</strong></div>
+          <span className="decode-normal-route" aria-hidden="true"><i /></span>
+          <div className="decode-side-label decode-simple-label"><strong>Base LLM Forward</strong></div>
           <div className="decode-normal-forward-flow">
+            <div className="decode-embedding-card decode-word-embedding"><small>Embedding</small><strong>“is”</strong><em>e<sub>new</sub></em></div>
+            <span className="decode-input-plus">+</span>
             <div className="decode-context-input">
               <strong>KV Cache Context</strong>
               <div className="decode-context-memory" aria-label="Cached prefix context">
@@ -1132,19 +1139,24 @@ function PrefillAnimation({
                 <span className="decode-memory-ribbon" aria-hidden="true" />
               </div>
             </div>
-            <span className="decode-input-plus">+</span>
-            <div className="decode-embedding-card decode-word-embedding"><small>Embedding</small><strong>“is”</strong><em>e<sub>new</sub></em></div>
             <span className="decode-flow-arrow"><i /></span>
             <div className="decode-network-field"><TeacherNeuralField active={active && step === 1} flow="collective" /></div>
-            <span className="decode-flow-arrow"><i /></span>
-            <div className="decode-output-pair decode-output-prediction-only">
-              <div className="decode-next-logits decode-explicit-prediction">
-                <strong>Next-token Prediction</strong>
-                <div className="decode-next-prediction-body">
-                  <span>{decodeDistribution.slice(0, 5).map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}</span>
-                  <i aria-hidden="true">→</i>
-                  <b>“a”</b>
-                </div>
+          </div>
+        </div>
+
+        <div className="decode-normal-output-row">
+          <div className="decode-side-label decode-simple-label"><strong>Decoding Output</strong></div>
+          <div className="decode-output-pair decode-normal-output-pair">
+            <div className="decode-new-kv">
+              <span><i>K</i><i>V</i></span>
+              <strong>KV for “is”</strong>
+            </div>
+            <div className="decode-next-logits decode-explicit-prediction">
+              <strong>Next-token Prediction</strong>
+              <div className="decode-next-prediction-body">
+                <span>{decodeDistribution.slice(0, 5).map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}</span>
+                <i aria-hidden="true">→</i>
+                <b>“a”</b>
               </div>
             </div>
           </div>
@@ -1158,13 +1170,14 @@ function PrefillAnimation({
         </div>
 
         <div className="decode-normal-state decode-merge-state">
-          <div className="decode-side-label decode-simple-label"><strong>Append Token</strong></div>
+          <div className="decode-side-label decode-simple-label"><strong>Sample &amp; Append</strong></div>
           <div className="decode-prefill-sample">
             <strong>Next-token Prediction</strong>
             <div>{decodeDistribution.map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}</div>
+            <span>sample</span>
             <b>“a”</b>
           </div>
-          <span className="decode-flow-arrow"><i /></span>
+          <span className="decode-merge-stage-arrow" aria-hidden="true" />
           <div className="decode-sequence-stage">
             <div className="decode-real-token-lane">
               <label>Effective Sequence</label>
@@ -1174,7 +1187,7 @@ function PrefillAnimation({
                     <span>{token.word}</span>
                   </i>
                 ))}
-                <i className="decode-real-new-token"><span>a</span><small>new</small></i>
+                <i className="decode-real-new-token"><span>a</span></i>
               </div>
             </div>
             <div className="decode-real-kv-lane">
@@ -1197,13 +1210,13 @@ function PrefillAnimation({
               <div className="decode-merge-tail-words"><i>the</i><i>world</i><i className="matched">is</i><i className="matched">a</i></div>
               <span><b>2-gram in R</b><em>is · a</em></span>
             </div>
-            <span className="decode-flow-arrow"><i /></span>
+            <span className="decode-action-arrow" aria-hidden="true" />
             <div className="decode-rollback-visual">
               <strong>KV Rollback</strong>
               <div><span className="decode-memory-mini" /><b className="decode-kv-retire">KV for “is”</b></div>
               <small>Remove the previous suffix state</small>
             </div>
-            <span className="decode-flow-arrow"><i /></span>
+            <span className="decode-action-arrow" aria-hidden="true" />
             <div className="decode-merge-module-visual">
               <strong>Apply Mφ</strong>
               <div><span>is</span><i className="decode-pair-amp">&amp;</i><span>a</span><i>→</i><b>Mφ</b><i>→</i><em>“is a”</em></div>
@@ -1212,8 +1225,11 @@ function PrefillAnimation({
         </div>
 
         <div className="decode-forward-block decode-normal-forward decode-merge-forward">
-          <div className="decode-side-label decode-simple-label"><strong>Frozen Base LLM</strong></div>
+          <span className="decode-merge-route" aria-hidden="true"><i /></span>
+          <div className="decode-side-label decode-simple-label"><strong>Base LLM Forward</strong></div>
           <div className="decode-normal-forward-flow">
+            <div className="decode-embedding-card decode-word-embedding decode-super-embedding"><small>Merged Embedding</small><strong>“is a”</strong><em>ẽ<sub>is,a</sub></em></div>
+            <span className="decode-input-plus">+</span>
             <div className="decode-context-input decode-rollback-context">
               <strong>Rolled-back KV Context</strong>
               <div className="decode-context-memory" aria-label="KV context after suffix rollback">
@@ -1222,19 +1238,24 @@ function PrefillAnimation({
                 <span className="decode-memory-ribbon" aria-hidden="true" />
               </div>
             </div>
-            <span className="decode-input-plus">+</span>
-            <div className="decode-embedding-card decode-word-embedding decode-super-embedding"><small>Merged Embedding</small><strong>“is a”</strong><em>ẽ<sub>is,a</sub></em></div>
             <span className="decode-flow-arrow"><i /></span>
             <div className="decode-network-field"><TeacherNeuralField active={active && step === 2} flow="collective" /></div>
-            <span className="decode-flow-arrow"><i /></span>
-            <div className="decode-output-pair decode-output-prediction-only">
-              <div className="decode-next-logits decode-explicit-prediction">
-                <strong>Next-token Prediction</strong>
-                <div className="decode-next-prediction-body">
-                  <span>{decodeDistribution.slice(0, 5).map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}</span>
-                  <i aria-hidden="true">→</i>
-                  <b>“test”</b>
-                </div>
+          </div>
+        </div>
+
+        <div className="decode-merge-output-row">
+          <div className="decode-side-label decode-simple-label"><strong>Decoding Output</strong></div>
+          <div className="decode-output-pair decode-normal-output-pair decode-merge-output-pair">
+            <div className="decode-new-kv">
+              <span><i>K</i><i>V</i></span>
+              <strong>KV for “is a”</strong>
+            </div>
+            <div className="decode-next-logits decode-explicit-prediction">
+              <strong>Next-token Prediction</strong>
+              <div className="decode-next-prediction-body">
+                <span>{decodeDistribution.slice(0, 5).map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}</span>
+                <i aria-hidden="true">→</i>
+                <b>“test”</b>
               </div>
             </div>
           </div>

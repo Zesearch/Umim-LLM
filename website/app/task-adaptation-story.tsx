@@ -1,32 +1,6 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
-const stages = ["New rules", "Task SFT", "DPO"] as const;
-
-function ProbabilityBars({ variant }: { variant: "teacher" | "student" }) {
-  const heights = variant === "teacher" ? [32, 62, 88, 49, 26] : [35, 59, 84, 52, 29];
-
-  return (
-    <div className={`adapt-probability-bars adapt-${variant}`} aria-hidden="true">
-      {heights.map((height, index) => (
-        <i key={index} style={{ height: `${height}%` }} />
-      ))}
-    </div>
-  );
-}
+import { Database, LockKeyhole, RefreshCw } from "lucide-react";
 
 export function TaskAdaptationStory() {
-  const [activeStage, setActiveStage] = useState(0);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setActiveStage((stage) => (stage + 1) % stages.length);
-    }, 5200);
-
-    return () => window.clearInterval(timer);
-  }, []);
-
   return (
     <section className="task-adaptation-section" id="task-adaptation" aria-labelledby="task-adaptation-title">
       <div className="task-adaptation-shell">
@@ -37,175 +11,195 @@ export function TaskAdaptationStory() {
           </div>
         </header>
 
-        <figure className="task-adaptation-figure">
-          <div className="adapt-frozen-rail">
-            <span className="adapt-lock" aria-hidden="true"><i /></span>
-            <strong>Base LLM θ</strong>
-            <span>Frozen throughout</span>
-            <i className="adapt-rail-line" aria-hidden="true" />
+        <figure className="task-adaptation-figure adapt-method-figure">
+          <div className="demo-legend adapt-method-legend">
+            <span className="demo-rule-state"><i /> Merge Rules <b>R<sub>task</sub> · Re-mined</b></span>
+            <span className="demo-frozen-state"><i /> Base LLM θ <b>Frozen throughout</b></span>
+            <span className="demo-trainable-state"><i /> Merge Module Mφ <b>Only trainable component</b></span>
           </div>
 
-          <div className="adapt-story-grid">
-            <article className={`adapt-stage adapt-rules-stage ${activeStage === 0 ? "is-active" : ""}`}>
-              <header className="adapt-stage-heading">
+          <div className="adapt-method-canvas">
+            <section className="adapt-method-stage adapt-method-rules" aria-labelledby="adapt-method-rules-title">
+              <header className="adapt-method-stage-label">
                 <span>01</span>
                 <div>
-                  <small>Target task</small>
-                  <h3>Re-mine Merge Rules</h3>
+                  <h3 id="adapt-method-rules-title">Re-mine rules</h3>
                 </div>
               </header>
 
-              <div className="adapt-corpus" aria-label="Repeated spans found in target-task examples">
-                <div className="adapt-paper adapt-paper-back" aria-hidden="true" />
-                <div className="adapt-paper adapt-paper-middle" aria-hidden="true" />
-                <div className="adapt-paper adapt-paper-front">
-                  <span>A woman walks into the room and</span>
-                  <span>the <mark>language model</mark> predicts</span>
-                  <span>what happens <mark>as a result of</mark> it.</span>
-                  <span>The answer follows <mark>in the world</mark>...</span>
+              <div className="adapt-method-stage-body adapt-rule-computation">
+                <div className="adapt-target-examples">
+                  <div className="adapt-method-component-heading">
+                    <small>Target task</small>
+                    <strong>D<sub>task</sub></strong>
+                  </div>
+                  <div className="adapt-target-task-visual">
+                    <span className="adapt-target-task-icon" aria-hidden="true"><Database /></span>
+                    <div>
+                      <strong>Downstream task</strong>
+                      <span className="adapt-target-task-samples" aria-hidden="true">
+                        <i><b /><b /><b /></i>
+                        <i><b /><b /><b /></i>
+                        <i><b /><b /><b /></i>
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="adapt-scan-line" aria-hidden="true" />
-              </div>
 
-              <div className="adapt-rule-extraction">
-                <span>Fast frequency count</span>
-                <i aria-hidden="true" />
-                <strong>R<sub>task</sub></strong>
-              </div>
-
-              <div className="adapt-coverage">
-                <div>
-                  <span>Task coverage</span>
-                  <strong>Broader</strong>
+                <div className="adapt-method-arrow adapt-method-rule-arrow" aria-hidden="true">
+                  <span>count 2–4-grams</span><i />
                 </div>
-                <div className="adapt-coverage-track" aria-hidden="true"><i /></div>
-              </div>
-            </article>
 
-            <article className={`adapt-stage adapt-sft-stage ${activeStage === 1 ? "is-active" : ""}`}>
-              <header className="adapt-stage-heading">
+                <div className="adapt-method-miner">
+                  <div>
+                    <small>Frequency mining</small>
+                    <strong>f(g) ≥ τ</strong>
+                  </div>
+                  <div className="adapt-method-frequency" aria-hidden="true">
+                    <span>τ</span>
+                    <i style={{ height: "29%" }} />
+                    <i style={{ height: "45%" }} />
+                    <i className="is-kept" style={{ height: "72%" }} />
+                    <i className="is-kept" style={{ height: "88%" }} />
+                    <i className="is-kept" style={{ height: "64%" }} />
+                    <i style={{ height: "36%" }} />
+                  </div>
+                </div>
+
+                <div className="adapt-method-arrow" aria-hidden="true"><i /></div>
+
+                <div className="adapt-method-ruleset">
+                  <div className="adapt-method-component-heading">
+                    <small>Task-specific merge rules</small>
+                  </div>
+                  <div className="adapt-rule-set-visual">
+                    <div className="adapt-rule-patterns" aria-hidden="true">
+                      <span><i /><i /><b /><em /></span>
+                      <span><i /><i /><i /><b /><em /></span>
+                      <span><i /><i /><i /><i /><b /><em /></span>
+                    </div>
+                    <strong>R<sub>task</sub></strong>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <div className="adapt-rules-to-sft" aria-hidden="true">
+              <i />
+            </div>
+
+            <section className="adapt-method-stage adapt-method-sft" aria-labelledby="adapt-method-sft-title">
+              <header className="adapt-method-stage-label">
                 <span>02</span>
                 <div>
-                  <small>Supervised adaptation</small>
-                  <h3>Task Distillation</h3>
+                  <h3 id="adapt-method-sft-title">Task SFT</h3>
                 </div>
               </header>
 
-              <div className="adapt-sft-init">
-                <div className="adapt-module adapt-module-base">
-                  <small>WikiText initialization</small>
-                  <strong>Base M<sub>φ</sub></strong>
+              <div className="adapt-method-stage-body adapt-sft-summary">
+                <div className="adapt-sft-summary-inputs">
+                  <div className="adapt-sft-summary-source">
+                    <small>WikiText-pretrained</small>
+                    <strong>M<sub>φ</sub><sup>WT</sup></strong>
+                    <span>Base merge module</span>
+                  </div>
+                  <i aria-hidden="true">+</i>
+                  <div className="adapt-sft-summary-source is-rules">
+                    <small>Task-specific rules</small>
+                    <strong>R<sub>task</sub></strong>
+                    <span>Re-mined above</span>
+                  </div>
                 </div>
-                <span aria-hidden="true">→</span>
-                <div className="adapt-module adapt-module-sft">
-                  <small>Trainable</small>
+
+                <div className="adapt-method-arrow" aria-hidden="true"><i /></div>
+
+                <div className="adapt-sft-summary-process">
+                  <small>Target-task adaptation</small>
+                  <strong>Task SFT</strong>
+                  <div>
+                    <span className="is-frozen"><LockKeyhole /> Base LLM θ frozen</span>
+                    <span className="is-trainable"><RefreshCw /> Update M<sub>φ</sub> only</span>
+                  </div>
+                </div>
+
+                <div className="adapt-method-update-arrow">
+                  <span>update φ only</span><i aria-hidden="true" />
+                </div>
+
+                <div className="adapt-method-module-state is-sft">
+                  <small>SFT merge module</small>
                   <strong>M<sub>φ</sub><sup>SFT</sup></strong>
                 </div>
               </div>
 
-              <div className="adapt-distillation-panel">
-                <div className="adapt-distribution-row">
-                  <div>
-                    <span>Teacher</span>
-                    <small>Original task sequence</small>
-                  </div>
-                  <ProbabilityBars variant="teacher" />
-                </div>
-                <div className="adapt-alignment" aria-hidden="true">
-                  <i /><span>Align distributions</span><i />
-                </div>
-                <div className="adapt-distribution-row adapt-student-row">
-                  <div>
-                    <span>Student</span>
-                    <small>Compressed with R<sub>task</sub></small>
-                  </div>
-                  <ProbabilityBars variant="student" />
-                </div>
-              </div>
+            </section>
 
-              <div className="adapt-gradient-note">
-                <span aria-hidden="true">↑</span>
-                <strong>Only M<sub>φ</sub> receives gradients</strong>
-              </div>
-            </article>
+            <div className="adapt-sft-to-rl" aria-hidden="true"><i /></div>
 
-            <article className={`adapt-stage adapt-dpo-stage ${activeStage === 2 ? "is-active" : ""}`}>
-              <header className="adapt-stage-heading">
+            <section className="adapt-method-stage adapt-method-rl" aria-labelledby="adapt-method-rl-title">
+              <header className="adapt-method-stage-label">
                 <span>03</span>
                 <div>
-                  <small>Preference optimization</small>
-                  <h3>RL with DPO</h3>
+                  <h3 id="adapt-method-rl-title">Task RL</h3>
                 </div>
               </header>
 
-              <div className="adapt-dpo-models">
-                <div className="adapt-policy-model">
-                  <small>Policy · Trainable</small>
+              <div className="adapt-method-stage-body adapt-rl-summary">
+                <div className="adapt-method-module-state is-sft adapt-rl-start">
+                  <small>SFT merge module</small>
                   <strong>M<sub>φ</sub><sup>SFT</sup></strong>
+                  <em>with R<sub>task</sub></em>
                 </div>
-                <div className="adapt-reference-model">
-                  <small>Reference · Frozen</small>
-                  <strong>M<sub>φ</sub><sup>ref</sup></strong>
+
+                <div className="adapt-method-arrow"><span>construct pairs</span><i aria-hidden="true" /></div>
+
+                <div className="adapt-dpo-sequences">
+                  <div className="adapt-method-component-heading">
+                    <small>DPO sequence pairs</small>
+                  </div>
+                  <div className="adapt-dpo-pairs" aria-label="Chosen and rejected DPO sequences">
+                    <span className="is-chosen"><b>y<sup>+</sup></b><i /><i /><i /></span>
+                    <span className="is-rejected"><b>y<sup>−</sup></b><i /><i /><i /></span>
+                  </div>
+                </div>
+
+                <div className="adapt-method-arrow" aria-hidden="true"><i /></div>
+
+                <div className="adapt-sft-summary-process adapt-rl-summary-process">
+                  <small>Task-specific optimization</small>
+                  <strong>Task RL (DPO)</strong>
+                  <div>
+                    <span className="is-frozen"><LockKeyhole /> Base LLM θ frozen</span>
+                    <span className="is-trainable"><RefreshCw /> Update M<sub>φ</sub> only</span>
+                  </div>
+                </div>
+
+                <div className="adapt-method-update-arrow adapt-rl-update-arrow">
+                  <span>update φ only</span><i aria-hidden="true" />
+                </div>
+
+                <div className="adapt-method-module-state is-final">
+                  <small>Final module</small>
+                  <strong>M<sub>φ</sub><sup>task</sup></strong>
                 </div>
               </div>
+            </section>
 
-              <div className="adapt-preference-panel">
-                <div className="adapt-context-line">
-                  <span>Shared compressed context</span>
-                  <i aria-hidden="true" />
-                </div>
-                <div className="adapt-ending adapt-ending-preferred">
-                  <span aria-hidden="true">✓</span>
-                  <div><small>Preferred</small><strong>Correct continuation</strong></div>
-                  <em>log p ↑</em>
-                </div>
-                <div className="adapt-ending adapt-ending-rejected">
-                  <span aria-hidden="true">×</span>
-                  <div><small>Rejected</small><strong>Incorrect continuations</strong></div>
-                  <em>log p ↓</em>
-                </div>
+            <div className="adapt-method-deployment">
+              <span>Final task-adapted inference</span>
+              <div className="adapt-deployment-flow">
+                <strong>Target-task input</strong>
+                <i aria-hidden="true" />
+                <strong className="is-merge">Merge token spans using R<sub>task</sub> and M<sub>φ</sub><sup>task</sup></strong>
+                <i aria-hidden="true" />
+                <strong className="is-frozen">Frozen LLM θ</strong>
               </div>
-
-              <div className="adapt-final-module">
-                <span>DPO preference</span>
-                <i aria-hidden="true">→</i>
-                <strong>Task-Adapted M<sub>φ</sub></strong>
-              </div>
-            </article>
-          </div>
-
-          <div className="adapt-outcome-row">
-            <div>
-              <span>More task-specific spans</span>
-              <strong>Higher merge ratio</strong>
             </div>
-            <i aria-hidden="true" />
-            <div>
-              <span>Better task behavior</span>
-              <strong>Accuracy ↑</strong>
-            </div>
-            <p>Backbone parameters updated: <strong>0</strong></p>
           </div>
 
           <figcaption>
-            Re-count task-specific merge rules, initialize from the WikiText-trained Base M<sub>φ</sub>,
-            then adapt only the lightweight merge module with task distillation and DPO.
+            Task adaptation re-mines R<sub>task</sub>, applies SFT to the WikiText-pretrained merge module, uses M<sub>φ</sub><sup>SFT</sup> to construct DPO sequence pairs, and applies RL only to the merge module. The backbone LLM remains frozen throughout.
           </figcaption>
-
-          <div className="adapt-stage-controls" aria-label="Task adaptation stages">
-            {stages.map((stage, index) => (
-              <button
-                type="button"
-                key={stage}
-                className={activeStage === index ? "is-active" : ""}
-                onClick={() => setActiveStage(index)}
-                aria-pressed={activeStage === index}
-              >
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                {stage}
-              </button>
-            ))}
-          </div>
         </figure>
       </div>
     </section>
