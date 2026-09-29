@@ -40,7 +40,7 @@ export default function Home() {
         <nav className="paper-links" aria-label="Paper resources">
           <a
             className="resource-link"
-            href="/paper.pdf"
+            href="https://arxiv.org/pdf/2609.27233"
             target="_blank"
             rel="noreferrer"
             aria-label="Read the UMIM paper"
