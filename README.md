@@ -12,8 +12,8 @@
 </p>
 
 <p align="center">
-  <a href="https://zesearch.github.io/Umim-LLM/">
-    <img src="https://img.shields.io/badge/Project-Page-34979E?logo=githubpages&amp;logoColor=white" alt="UMIM project page">
+  <a href="https://umim-paper-website.zesearch.workers.dev/">
+    <img src="https://img.shields.io/badge/Project-Page-34979E" alt="UMIM project page">
   </a>
   <a href="https://arxiv.org/abs/2609.27233">
     <img src="https://img.shields.io/badge/arXiv-2609.27233-B31B1B?logo=arxiv&amp;logoColor=white" alt="UMIM on arXiv">
