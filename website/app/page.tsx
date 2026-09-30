@@ -14,7 +14,7 @@ export default function Home() {
         <section className="hero" aria-labelledby="paper-title">
         <p className="venue-line">
           <span className="venue-mark" aria-hidden="true" />
-          UMIM
+          UMIM · NeurIPS 2026
         </p>
 
         <h1 id="paper-title">
